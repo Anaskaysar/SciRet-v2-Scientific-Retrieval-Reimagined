@@ -40,11 +40,105 @@ custom_theme = gr.themes.Soft(
 with gr.Blocks(theme=custom_theme, title="SciRet v2", css="footer {visibility: hidden}") as iface:
     # Header Area
     gr.HTML("""
-    <div style="text-align: center; max-width: 900px; margin: 0 auto; padding: 25px 15px; border-bottom: 2px solid #0d6efd;">
-        <h1 style="font-family: 'Libre Baskerville', serif; color: #212529; margin-bottom: 10px;">SciRet v2</h1>
-        <h3 style="color: #495057; font-weight: 400; font-size: 1.25rem;">Multimodal Retrieval-Augmented Systems for Scientific Knowledge Access</h3>
-        <p style="color: #6c757d; font-style: italic; margin-top: 15px;">By <span style="font-weight: bold;">Kaysarul Anas Apurba</span></p>
+    <style>
+        .sciret-header {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 15px 10px 15px;
+        }
+        .sciret-eyebrow {
+            color: var(--color-accent, #0d6efd);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+        }
+        .sciret-logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.8rem;
+            color: var(--body-text-color, #212529);
+            margin: 0 0 10px 0;
+        }
+        .sciret-logo .v2 {
+            color: var(--color-accent, #0d6efd);
+            font-size: 1.5rem;
+            vertical-align: super;
+        }
+        .sciret-desc {
+            color: var(--body-text-color-subdued, #495057);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .pill {
+            background-color: var(--background-fill-secondary, #f8f9fa);
+            color: var(--color-accent, #0d6efd);
+            border: 1px solid var(--border-color-accent, #0d6efd);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .pill:hover {
+            background-color: var(--color-accent, #0d6efd);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+        }
+        .sciret-author {
+            color: var(--body-text-color-subdued, #6c757d);
+            font-size: 0.95rem;
+        }
+        .sciret-author a {
+            color: var(--body-text-color, #212529);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        .sciret-author a:hover {
+            color: var(--color-accent, #0d6efd);
+        }
+        .sciret-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-accent, #0d6efd), transparent);
+            margin: 10px auto 30px auto;
+            width: 70%;
+            opacity: 0.5;
+        }
+    </style>
+    <div class="sciret-header">
+        <p class="sciret-eyebrow">Scientific Retrieval System</p>
+        <h1 class="sciret-logo">SciRet <span class="v2">v2</span></h1>
+        <p class="sciret-desc">
+            Multimodal Retrieval-Augmented Generation for Scientific Knowledge Access —
+            reasoning across text, figures, and tables in scientific literature.
+        </p>
+        <div class="pill-row">
+            <span class="pill">BGE-M3</span>
+            <span class="pill">CLIP</span>
+            <span class="pill">BM25 + Dense</span>
+            <span class="pill">Cross-Encoder Reranker</span>
+            <span class="pill">Mistral 7B</span>
+            <span class="pill">LLaVA</span>
+            <span class="pill">RAGAS</span>
+        </div>
+        <p class="sciret-author">
+            <a href="https://github.com/Anaskaysar">Kaysarul Anas Apurba</a>
+            &nbsp;·&nbsp;
+            <span style="color:var(--text-faint, var(--body-text-color-subdued));">MSc · Independent Researcher</span>
+        </p>
     </div>
+    <div class="sciret-divider"></div>
     """)
     
     with gr.Tabs(elem_id="main-tabs"):
