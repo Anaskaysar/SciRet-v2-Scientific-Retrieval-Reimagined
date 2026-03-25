@@ -10,6 +10,8 @@
 
 *An evolution of the original SciRet (2022) — extending text-only RAG to reason across text, figures, tables, and equations in scientific literature.*
 
+![SciRet v2 Demo Interface](Images/Demopage.png)
+
 </div>
 
 ---
