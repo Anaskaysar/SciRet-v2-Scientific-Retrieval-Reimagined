@@ -25,8 +25,7 @@ index/
 # Documentation/Configs that shouldn't be shared
 .env
 Ignore.md
-SciRet_v2_Research_Proposal.docx
-SciRet_v2_Research_Proposal.pdf
+0_docs/SciRet_v2_Research_Proposal.docx 
 0_docs/PDFs
 truth.md
 tiered_dataset_approch.md

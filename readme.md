@@ -109,7 +109,14 @@ This project uses the **CORD-19 (COVID-19 Open Research Dataset Challenge)** —
 - Size: ~64GB (full), subset used for experiments
 - Content: Title, abstract, full text, figures, tables, metadata
 
+> [!TIP]
 > The dataset is not included in this repository due to size. See `Dataset_Link.txt` or the Kaggle link above.
+
+## Data Workflow
+
+1.  **Raw Data**: Place CORD-19 `metadata.csv` in `1_data/raw/`.
+2.  **Preprocessing**: Run `3_notebooks/011_eda.ipynb`. This cleans the data and exports a sampled subset (e.g., 1,000 papers) to `1_data/processed/cleaned_metadata.csv`.
+3.  **Chunking & Indexing**: Subsequent notebooks load the `cleaned_metadata.csv` to ensure consistency and speed.
 
 ---
 
@@ -208,8 +215,8 @@ _Results table will be populated as experiments are completed._
 ### Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/sciret-v2.git
-cd sciret-v2
+git clone https://github.com/Anaskaysar/SciRet-v2-Scientific-Retrieval-Reimagined
+cd SciRet-v2-Scientific-Retrieval-Reimagined
 pip install -r requirements.txt
 ```
 
