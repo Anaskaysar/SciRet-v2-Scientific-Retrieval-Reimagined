@@ -40,6 +40,12 @@ print("Loading models and indexes...")
 chunks_df    = pd.read_parquet(CFG.chunks_path)
 chunk_lookup = chunks_df.set_index("chunk_id").to_dict("index")
 
+# ensure journal column exists even if not in parquet
+if "journal" not in chunks_df.columns:
+    chunks_df["journal"] = ""
+if "publish_time" not in chunks_df.columns:
+    chunks_df["publish_time"] = ""
+
 embedder = SentenceTransformer("BAAI/bge-m3", device=DEVICE)
 embedder.max_seq_length = 512
 
