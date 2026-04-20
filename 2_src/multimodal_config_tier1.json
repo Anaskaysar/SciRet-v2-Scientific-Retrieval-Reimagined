@@ -1,0 +1,25 @@
+{
+  "tier": "tier1",
+  "project_root": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2",
+  "chroma_dir": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2\\1_data\\embeddings\\tier1\\chroma_db",
+  "text_collection": "sciret_tier1_bge_m3_cs400_o50",
+  "figure_collection": "sciret_tier1_clip_vitb32",
+  "bm25_index": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2\\1_data\\embeddings\\tier1\\bm25_index.pkl",
+  "chunks_parquet": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2\\1_data\\processed\\tier1\\chunks.parquet",
+  "figures_metadata_parquet": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2\\1_data\\processed\\tier1\\figures_metadata.parquet",
+  "models": {
+    "text_embedder": "BAAI/bge-m3",
+    "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "vision": "openai/clip-vit-base-patch32",
+    "generator": "gemini-1.5-flash"
+  },
+  "retrieval": {
+    "dense_top_k": 100,
+    "sparse_top_k": 100,
+    "rrf_k": 60,
+    "rerank_top_k": 5,
+    "figure_top_k": 3,
+    "figure_min_sim": 0.18
+  },
+  "seed": 42
+}

@@ -1,2 +1,35 @@
-pywatchman==3.0.0
-wheel==0.45.1
+# Core Data & Math
+numpy
+pandas
+pyarrow
+matplotlib
+seaborn
+scikit-learn
+umap-learn
+
+# PDF Processing & Vision
+pymupdf
+pdfplumber
+Pillow
+
+# NLP & Embeddings
+transformers
+sentence-transformers
+rank-bm25
+torch
+torchvision
+torchaudio
+
+# Vector Store & RAG Framework
+chromadb
+langchain
+langchain-community
+langchain-huggingface
+
+# Evaluation
+ragas
+
+# API & UI
+google-generativeai
+gradio
+python-dotenv

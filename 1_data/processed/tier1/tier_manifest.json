@@ -16,14 +16,14 @@
     "pmcid",
     "pdf_json_files"
   ],
-  "source": "/Users/kaysarulanasapurba/Desktop/ResumeProjects/SciRet/SciRetv2/1_data/raw/metadata.csv",
-  "output": "/Users/kaysarulanasapurba/Desktop/ResumeProjects/SciRet/SciRetv2/1_data/processed/tier1/papers_clean.parquet",
+  "source": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2\\1_data\\raw\\metadata.csv",
+  "output": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2\\1_data\\processed\\tier1\\papers_clean.parquet",
   "chunking": {
     "strategy": "sentence_window",
     "chunk_size_tokens": 400,
     "overlap_tokens_equiv_sentences": 2,
     "min_tokens": 20,
-    "n_chunks": 1042,
-    "output": "/Users/kaysarulanasapurba/Desktop/ResumeProjects/SciRet/SciRetv2/1_data/processed/tier1/chunks.parquet"
+    "n_chunks": 1034,
+    "output": "D:\\SciRet-Scientific-Information-Made-Easy\\Sciret2\\1_data\\processed\\tier1\\chunks.parquet"
   }
 }
