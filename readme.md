@@ -11,7 +11,15 @@
 
 _An evolution of the original SciRet (2022) — extending text-only RAG to reason across text, figures, tables, and equations in scientific literature._
 
-![SciRet Demo Interface](0_docs/Images/Demopage.png)
+### Scientific Journal Interface (2026 Evolution)
+
+|                **Home**                |           **Search & Synthesis**           |
+| :------------------------------------: | :----------------------------------------: |
+| ![SciRet Home](0_docs/Images/home.png) | ![SciRet Search](0_docs/Images/search.png) |
+
+|             **About & Team**             |
+| :--------------------------------------: |
+| ![SciRet About](0_docs/Images/about.png) |
 
 </div>
 
@@ -32,7 +40,7 @@ This project is both a research contribution and a PhD preparation portfolio, ta
 | #       | Question                                                                                                                                                                                                             |
 | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **RQ1** | Does incorporating multimodal content — figures, tables, visual elements — into a RAG pipeline improve the quality, completeness, and faithfulness of answers to scientific queries compared to text-only retrieval? |
-| **RQ2** | How does a modern text-only RAG system (2026 components) compare to the Legacy SciRet (2022) on the same retrieval and generation tasks?                                                                           |
+| **RQ2** | How does a modern text-only RAG system (2026 components) compare to the Legacy SciRet (2022) on the same retrieval and generation tasks?                                                                             |
 | **RQ3** | What is the most effective strategy for fusing text and visual modalities — late fusion, early fusion, or learned fusion?                                                                                            |
 | **RQ4** | How can hallucination be detected and reduced in scientific answer generation where factual accuracy is critical?                                                                                                    |
 

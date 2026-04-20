@@ -1,0 +1,267 @@
+{% extends "base.html" %} {% block title %}About{% endblock %} {% block content
+%}
+<div class="max-w-3xl mx-auto px-6 py-14">
+  <div class="mb-12 text-center">
+    <span class="tag tag-amber mb-3">About this project</span>
+    <h1 class="text-3xl mt-2 mb-3">SciRet</h1>
+    <p class="text-sm" style="color: var(--muted)">
+      Compute-Aware Multimodal RAG for Reproducible Scientific Question
+      Answering
+    </p>
+  </div>
+
+  <!-- Origin -->
+  <div class="card p-8 mb-6">
+    <h2 class="text-xl mb-4">The original idea</h2>
+    <p class="text-sm leading-relaxed mb-4" style="color: var(--muted)">
+      SciRet started with a simple observation: during the COVID-19 pandemic,
+      important scientific findings were published faster than most people could
+      read them. Clinicians, journalists, and curious members of the public had
+      no reliable way to search across thousands of papers and get a
+      plain-language answer — with sources they could verify.
+    </p>
+    <p class="text-sm leading-relaxed" style="color: var(--muted)">
+      The original project was called
+      <em style="color: var(--ink)"
+        >"SciRet: Make Scientific Research Available for General Public."</em
+      >
+      That mission drives every design decision — from the choice of open-source
+      models to the compute-aware architecture that runs on a laptop.
+    </p>
+  </div>
+
+  <!-- What's new in v2 -->
+  <div class="card p-8 mb-6">
+    <h2 class="text-xl mb-5">What's new</h2>
+    <div class="flex flex-col gap-4">
+      {% set contributions = [ ("N1", "Controlled scale isolation", "Same
+      pipeline evaluated at 1,000 papers (Tier 1) and 50,000 papers (Tier 2),
+      isolating the effect of scale on retrieval quality. Derives design rules
+      for resource-constrained deployment."), ("N2", "Unified multimodal
+      retrieval", "Text passages and figure images are indexed separately and
+      retrieved together. CLIP embeddings enable image-text cross-modal matching
+      — finding relevant figures for text queries."), ("N3", "Citation Integrity
+      Score", "A formal grounding metric using DeBERTa-v3 NLI, independent of
+      the generation model. Measures whether every claim in the answer is
+      supported by a retrieved passage."), ("N4", "Compute-aware
+      reproducibility", "Tier 1 runs on any laptop. Tier 2 runs on Kaggle free
+      tier. Full code, indexes, and evaluation data are publicly released."), ]
+      %} {% for tag, title, body in contributions %}
+      <div class="flex gap-4">
+        <span class="tag tag-teal shrink-0 mt-0.5" style="height: fit-content"
+          >{{ tag }}</span
+        >
+        <div>
+          <p class="text-sm font-semibold mb-1" style="color: var(--ink)">
+            {{ title }}
+          </p>
+          <p class="text-sm" style="color: var(--muted); line-height: 1.7">
+            {{ body }}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Tech stack -->
+  <div class="card p-8 mb-6">
+    <h2 class="text-xl mb-5">Technology stack</h2>
+    <div class="grid grid-cols-2 gap-3">
+      {% set stack = [ ("Text embedding", "BAAI/bge-m3 (1024-dim)"), ("Sparse
+      retrieval", "BM25Okapi"), ("Vector index", "ChromaDB (persistent)"),
+      ("Fusion", "Reciprocal Rank Fusion"), ("Reranker",
+      "ms-marco-MiniLM-L-6-v2"), ("Figure embedding", "CLIP ViT-B/32
+      (512-dim)"), ("Captioning", "BLIP-2 (Tier 2)"), ("Generation", "Gemini 1.5
+      Flash"), ("Evaluation", "RAGAS + custom CIS"), ("Dataset", "CORD-19 (Allen
+      Institute)"), ] %} {% for label, value in stack %}
+      <div style="background: #f9f6f2; border-radius: 8px; padding: 10px 14px">
+        <p
+          class="text-xs font-semibold mb-0.5"
+          style="
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+          "
+        >
+          {{ label }}
+        </p>
+        <p
+          class="text-sm"
+          style="
+            color: var(--ink);
+            font-family: &quot;DM Mono&quot;, monospace;
+            font-size: 0.8rem;
+          "
+        >
+          {{ value }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Research Team -->
+  <div class="card p-8 mb-6">
+    <h2 class="text-xl mb-6">Research Team</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Lead Researcher -->
+      <div class="flex items-start gap-4">
+        <div
+          style="
+            width: 48px;
+            height: 48px;
+            background: var(--sand);
+            border-radius: 12px;
+            font-family: &quot;Lora&quot;, serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--amber-d);
+          "
+          class="flex items-center justify-center shrink-0"
+        >
+          K
+        </div>
+        <div>
+          <p class="font-semibold mb-0.5" style="color: var(--ink)">
+            Kaysarul Anas Apurba
+          </p>
+          <p class="text-xs mb-2" style="color: var(--muted)">
+            Lead Researcher · Laurentian University
+          </p>
+          <div class="flex gap-3">
+            <a
+              href="https://Kaysarulanas.me"
+              target="_blank"
+              class="tag tag-gray hover:bg-gray-200 transition-colors"
+              >Website</a
+            >
+            <a
+              href="https://github.com/Anaskaysar"
+              target="_blank"
+              class="tag tag-gray hover:bg-gray-200 transition-colors"
+              >GitHub</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Co-Author 1 -->
+      <div class="flex items-start gap-4">
+        <div
+          style="
+            width: 48px;
+            height: 48px;
+            background: var(--teal);
+            border-radius: 12px;
+            font-family: &quot;Lora&quot;, serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+          "
+          class="flex items-center justify-center shrink-0"
+        >
+          C1
+        </div>
+        <div>
+          <p class="font-semibold mb-0.5" style="color: var(--ink)">
+            Co-Author One
+          </p>
+          <p class="text-xs mb-2" style="color: var(--muted)">
+            Technical Lead — NLP & Pipeline
+          </p>
+          <div class="flex gap-3">
+            <span class="tag tag-gray">Modeling</span>
+            <span class="tag tag-gray">Data</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Co-Author 2 -->
+      <div class="flex items-start gap-4">
+        <div
+          style="
+            width: 48px;
+            height: 48px;
+            background: var(--amber);
+            border-radius: 12px;
+            font-family: &quot;Lora&quot;, serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+          "
+          class="flex items-center justify-center shrink-0"
+        >
+          C2
+        </div>
+        <div>
+          <p class="font-semibold mb-0.5" style="color: var(--ink)">
+            Co-Author Two
+          </p>
+          <p class="text-xs mb-2" style="color: var(--muted)">
+            Technical Lead — Evaluation & Writing
+          </p>
+          <div class="flex gap-3">
+            <span class="tag tag-gray">Evaluation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider my-8"></div>
+
+    <div class="bg-[#F9F6F2] p-6 rounded-xl">
+      <p class="text-sm font-semibold mb-2" style="color: var(--ink)">
+        About the collaboration
+      </p>
+      <p class="text-sm leading-relaxed" style="color: var(--muted)">
+        SciRet is the result of a collaborative effort focused on information
+        retrieval and multimodal AI for scientific question answering. This
+        project is part of a larger research initiative preparing for PhD
+        applications to world-class institutions including Paris-Saclay, EPFL,
+        and Bordeaux.
+      </p>
+    </div>
+  </div>
+
+  <!-- Target venues -->
+  <div class="card p-8">
+    <h2 class="text-xl mb-4">Publication targets</h2>
+    <div class="flex flex-col gap-3">
+      <div class="flex items-start gap-3">
+        <span class="tag tag-amber shrink-0 mt-0.5">Q1</span>
+        <div>
+          <p class="text-sm font-semibold" style="color: var(--ink)">
+            Information Processing & Management
+          </p>
+          <p class="text-xs" style="color: var(--muted)">
+            Elsevier · Impact Factor ~8.6 · Primary target
+          </p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="tag tag-teal shrink-0 mt-0.5">Conf</span>
+        <div>
+          <p class="text-sm font-semibold" style="color: var(--ink)">
+            ECIR 2027 — Short Paper
+          </p>
+          <p class="text-xs" style="color: var(--muted)">
+            European Conference on Information Retrieval · October 2026 deadline
+          </p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="tag tag-gray shrink-0 mt-0.5">Pre</span>
+        <div>
+          <p class="text-sm font-semibold" style="color: var(--ink)">
+            arXiv preprint
+          </p>
+          <p class="text-xs" style="color: var(--muted)">
+            cs.IR (primary) · cs.CL (secondary) · Month 6
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

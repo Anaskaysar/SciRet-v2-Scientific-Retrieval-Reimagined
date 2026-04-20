@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<style>
+  .hero-pattern {
+    background-image: radial-gradient(circle at 20% 50%, #FEF3E2 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, #E0F0EE 0%, transparent 40%);
+  }
+  .stat-num { font-family:'Lora',serif; font-weight:700; color:var(--amber-d); }
+  .step-line::before {
+    content:''; position:absolute; left:19px; top:40px;
+    width:2px; height:calc(100% + 24px);
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero-pattern py-20 px-6">
+  <div class="max-w-4xl mx-auto text-center">
+    <span class="tag tag-teal mb-4 fade-up">COVID-19 Research · CORD-19 · 1,000+ Papers</span>
+    <h1 class="fade-up fade-up-1 mt-3 mb-6"
+        style="font-size:clamp(2.2rem,5vw,3.5rem); line-height:1.15; color:var(--ink);">
+      Making scientific research<br/>
+      <em style="color:var(--amber);">accessible to everyone</em>
+    </h1>
+    <p class="fade-up fade-up-2 text-lg mb-10 max-w-2xl mx-auto"
+       style="color:var(--muted); line-height:1.75;">
+      SciRet searches thousands of peer-reviewed COVID-19 papers and answers your question
+      in plain language — with every claim traced back to its source.
+    </p>
+    <div class="fade-up fade-up-3 flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="/search"
+         class="btn-amber px-8 py-3 rounded-xl text-base inline-block">
+        Ask a research question →
+      </a>
+      <a href="/how-it-works"
+         style="color:var(--teal); border:1px solid var(--border); background:white;"
+         class="px-8 py-3 rounded-xl text-base inline-block font-medium hover:border-teal-600 transition-colors">
+        See how it works
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EXAMPLE QUERIES -->
+<section class="py-12 px-6" style="background:white;">
+  <div class="max-w-4xl mx-auto">
+    <p class="text-center text-sm font-medium mb-6" style="color:var(--muted); letter-spacing:.04em; text-transform:uppercase;">
+      Try asking
+    </p>
+    <div class="grid sm:grid-cols-2 gap-3">
+      {% set examples = [
+        ("What CT imaging findings are seen in COVID-19 pneumonia?", "Imaging"),
+        ("How does the spike protein bind to ACE2 receptors?", "Molecular"),
+        ("What are the risk factors for severe COVID-19?", "Clinical"),
+        ("How effective are mRNA vaccines against variants?", "Vaccines"),
+        ("What role does IL-6 play in cytokine storm?", "Immunology"),
+        ("What neurological complications occur in COVID-19?", "Neurology"),
+      ] %}
+      {% for q, cat in examples %}
+      <a href="/search?q={{ q | urlencode }}"
+         class="card flex items-start gap-3 px-4 py-3 text-sm group">
+        <span class="tag tag-amber mt-0.5 shrink-0">{{ cat }}</span>
+        <span style="color:var(--ink);" class="group-hover:text-teal-700 transition-colors leading-snug">
+          {{ q }}
+        </span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="py-14 px-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      <div class="card p-6">
+        <div class="stat-num text-4xl mb-1">{{ chunk_count | default('1,034') }}</div>
+        <div class="text-sm" style="color:var(--muted);">text passages indexed</div>
+      </div>
+      <div class="card p-6">
+        <div class="stat-num text-4xl mb-1">1,000</div>
+        <div class="text-sm" style="color:var(--muted);">peer-reviewed papers</div>
+      </div>
+      <div class="card p-6">
+        <div class="stat-num text-4xl mb-1">95%</div>
+        <div class="text-sm" style="color:var(--muted);">recall at top-10</div>
+      </div>
+      <div class="card p-6">
+        <div class="stat-num text-4xl mb-1">0.59</div>
+        <div class="text-sm" style="color:var(--muted);">context recall score</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS MINI -->
+<section class="py-14 px-6" style="background:white;">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-2xl text-center mb-2">How SciRet answers your question</h2>
+    <p class="text-center text-sm mb-10" style="color:var(--muted);">
+      Three steps from your question to a cited, grounded answer
+    </p>
+    <div class="flex flex-col gap-6">
+      {% set steps = [
+        ("01", "amber", "You ask in plain language",
+         "No need for scientific jargon. Ask it the way you'd ask a friend who happens to be a doctor."),
+        ("02", "teal", "SciRet searches the literature",
+         "Two retrieval systems (keyword + semantic) search 1,000+ COVID-19 papers simultaneously and combine their results."),
+        ("03", "amber", "You get a cited answer",
+         "An AI reads the most relevant passages and writes a clear answer — every claim linked back to its source paper."),
+      ] %}
+      {% for num, color, title, body in steps %}
+      <div class="flex gap-5 relative {% if not loop.last %}step-line{% endif %}">
+        <div style="width:40px; height:40px; min-width:40px; background:var(--{{ color }}); border-radius:50%;"
+             class="flex items-center justify-center shrink-0">
+          <span style="font-family:'DM Mono',monospace; font-size:0.7rem; color:white; font-weight:500;">
+            {{ num }}
+          </span>
+        </div>
+        <div class="pb-2">
+          <h3 class="text-base font-semibold mb-1" style="font-family:'DM Sans',sans-serif;">{{ title }}</h3>
+          <p class="text-sm" style="color:var(--muted); line-height:1.7;">{{ body }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-10">
+      <a href="/how-it-works" style="color:var(--teal);" class="text-sm font-medium hover:underline">
+        Read the full technical explanation →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="py-16 px-6">
+  <div class="max-w-3xl mx-auto text-center card p-12"
+       style="background:linear-gradient(135deg,#FEF3E2,#E0F0EE);">
+    <h2 class="text-2xl mb-3">Ready to explore the research?</h2>
+    <p class="mb-7 text-sm" style="color:var(--muted);">
+      Over 1,000 peer-reviewed COVID-19 papers, searchable in plain language.
+    </p>
+    <a href="/search" class="btn-amber px-8 py-3 rounded-xl text-base inline-block">
+      Start searching →
+    </a>
+  </div>
+</section>
+
+{% endblock %}

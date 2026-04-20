@@ -30,7 +30,7 @@ Paper/
 0_docs/PDFs
 truth.md
 tiered_dataset_approch.md
-
+.env
 # Jupyter Notebooks
 .ipynb_checkpoints
 */.ipynb_checkpoints/*

@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block head %}
+<style>
+  #search-input {
+    font-family: 'Lora', serif; font-size: 1.1rem;
+    border: 2px solid var(--border); outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    background: white; color: var(--ink);
+  }
+  #search-input:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(232,144,74,.15);
+  }
+  #search-input::placeholder { color: #B8AFA6; }
+
+  .passage-card {
+    border-left: 3px solid var(--border);
+    padding: 14px 16px;
+    transition: border-color .2s, background .2s;
+    cursor: default;
+  }
+  .passage-card:hover { border-left-color: var(--amber); background: #FFFBF7; }
+  .passage-card.active { border-left-color: var(--teal); background: #F0F9F7; }
+
+  .score-pill {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    padding: 2px 7px; border-radius: 20px;
+    background: #F0EDE9; color: var(--muted);
+  }
+
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; } 50% { opacity:.3; }
+  }
+  .loading-dot { animation: pulse-dot 1.2s ease-in-out infinite; }
+  .loading-dot:nth-child(2) { animation-delay:.2s; }
+  .loading-dot:nth-child(3) { animation-delay:.4s; }
+
+  #answer-box {
+    background: white; border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+    line-height: 1.8; font-size: 0.95rem;
+    min-height: 120px;
+  }
+  .cite-tag {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%;
+    font-size: 0.65rem; font-weight: 700;
+    background: var(--teal); color: white;
+    vertical-align: super; margin-left: 1px;
+  }
+  #results-area { display: none; }
+  #empty-state  { display: block; }
+
+  .example-chip {
+    border: 1px solid var(--border); background: white;
+    border-radius: 20px; padding: 5px 14px; font-size: 0.8rem;
+    color: var(--muted); cursor: pointer; transition: all .15s; white-space: nowrap;
+  }
+  .example-chip:hover {
+    border-color: var(--amber); color: var(--amber-d); background: #FEF3E2;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-6 py-10">
+
+  <!-- Search bar -->
+  <div class="max-w-3xl mx-auto mb-8">
+    <h1 class="text-2xl mb-6 text-center" style="color:var(--ink);">
+      Ask a question about COVID-19 research
+    </h1>
+    <div class="relative">
+      <textarea id="search-input" rows="2"
+        class="w-full rounded-xl px-5 py-4 pr-28 resize-none"
+        placeholder="e.g. What CT imaging findings are associated with COVID-19 pneumonia?"></textarea>
+      <button id="search-btn"
+        class="btn-amber absolute right-3 bottom-3 px-5 py-2 rounded-lg text-sm">
+        Search
+      </button>
+    </div>
+
+    <!-- Options row -->
+    <div class="flex items-center gap-4 mt-3 px-1">
+      <label class="flex items-center gap-2 text-sm cursor-pointer" style="color:var(--muted);">
+        <input type="checkbox" id="reranker-toggle" class="rounded"
+               style="accent-color:var(--teal);">
+        <span>Enable reranking</span>
+        <span style="font-size:0.7rem; background:#FEF3E2; color:var(--amber-d);
+                     padding:1px 6px; border-radius:10px;">experimental</span>
+      </label>
+      <span class="ml-auto text-xs" style="color:var(--muted);">
+        Press <kbd style="background:#F0EDE9; padding:1px 5px; border-radius:4px; font-size:0.7rem;">Enter</kbd> to search
+      </span>
+    </div>
+
+    <!-- Example queries -->
+    <div class="flex gap-2 flex-wrap mt-4">
+      {% set examples = [
+        "CT imaging in COVID-19 pneumonia",
+        "ACE2 receptor binding mechanism",
+        "mRNA vaccine efficacy variants",
+        "IL-6 cytokine storm COVID",
+        "Long COVID symptoms definition",
+        "Risk factors severe COVID-19",
+      ] %}
+      {% for ex in examples %}
+      <button class="example-chip" onclick="setQuery('{{ ex }}')">{{ ex }}</button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="max-w-3xl mx-auto text-center py-16">
+    <div style="width:64px;height:64px;background:var(--sand);border-radius:16px;margin:0 auto 16px;"
+         class="flex items-center justify-center">
+      <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" stroke="#B8AFA6" stroke-width="1.5"/>
+        <path d="M16.5 16.5L21 21" stroke="#B8AFA6" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="text-sm" style="color:var(--muted);">
+      Your answer and sources will appear here
+    </p>
+  </div>
+
+  <!-- Loading state -->
+  <div id="loading-state" class="max-w-3xl mx-auto text-center py-16" style="display:none;">
+    <div class="flex justify-center gap-2 mb-4">
+      <div class="loading-dot w-2 h-2 rounded-full" style="background:var(--amber);"></div>
+      <div class="loading-dot w-2 h-2 rounded-full" style="background:var(--amber);"></div>
+      <div class="loading-dot w-2 h-2 rounded-full" style="background:var(--amber);"></div>
+    </div>
+    <p class="text-sm" style="color:var(--muted);" id="loading-msg">Searching the literature…</p>
+  </div>
+
+  <!-- Results area -->
+  <div id="results-area">
+    <div class="flex items-center gap-3 mb-6 max-w-6xl mx-auto">
+      <span class="tag tag-teal text-xs" id="result-count-tag"></span>
+      <span class="text-sm" style="color:var(--muted);" id="result-query-label"></span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+
+      <!-- LEFT — Answer -->
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--teal);"></div>
+          <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:var(--teal);">
+            Generated Answer
+          </h2>
+        </div>
+        <div id="answer-box">
+          <p id="answer-text" class="leading-relaxed"></p>
+          <p id="no-gemini-msg" class="text-sm" style="color:var(--muted); display:none;">
+            ⚠ Set <code class="font-mono" style="background:#F0EDE9;padding:1px 5px;border-radius:4px;">GEMINI_API_KEY</code>
+            to enable answer generation. Retrieved passages are shown on the right.
+          </p>
+        </div>
+        <p class="text-xs mt-3 px-1" style="color:var(--muted);">
+          Answer generated by Gemini 1.5 Flash, grounded in retrieved passages only.
+        </p>
+      </div>
+
+      <!-- RIGHT — Passages -->
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--amber);"></div>
+          <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:var(--amber-d);">
+            Retrieved Passages
+          </h2>
+        </div>
+        <div id="passages-list" class="flex flex-col gap-3"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const input    = document.getElementById('search-input');
+const btn      = document.getElementById('search-btn');
+const toggle   = document.getElementById('reranker-toggle');
+const empty    = document.getElementById('empty-state');
+const loading  = document.getElementById('loading-state');
+const results  = document.getElementById('results-area');
+const loadMsg  = document.getElementById('loading-msg');
+
+// pre-fill from URL param
+const urlQ = new URLSearchParams(window.location.search).get('q');
+if (urlQ) { input.value = urlQ; doSearch(); }
+
+function setQuery(q) { input.value = q; input.focus(); }
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSearch(); }
+});
+btn.addEventListener('click', doSearch);
+
+async function doSearch() {
+  const q = input.value.trim();
+  if (!q) return;
+
+  empty.style.display   = 'none';
+  results.style.display = 'none';
+  loading.style.display = 'block';
+  loadMsg.textContent   = 'Searching the literature…';
+
+  setTimeout(() => { loadMsg.textContent = 'Ranking passages…'; }, 800);
+  setTimeout(() => { loadMsg.textContent = 'Generating answer…'; }, 1800);
+
+  try {
+    const res  = await fetch('/api/query', {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify({ query: q, use_reranker: toggle.checked }),
+    });
+    const data = await res.json();
+    loading.style.display = 'none';
+    renderResults(data);
+  } catch(e) {
+    loading.style.display = 'none';
+    empty.style.display = 'block';
+    alert('Request failed: ' + e.message);
+  }
+}
+
+function renderResults(data) {
+  results.style.display = 'block';
+
+  document.getElementById('result-count-tag').textContent =
+    data.passages.length + ' passages retrieved';
+  document.getElementById('result-query-label').textContent =
+    '"' + data.query + '"';
+
+  const answerText   = document.getElementById('answer-text');
+  const noGeminiMsg  = document.getElementById('no-gemini-msg');
+
+  if (data.answer) {
+    answerText.innerHTML  = formatAnswer(data.answer);
+    answerText.style.display = 'block';
+    noGeminiMsg.style.display = 'none';
+  } else {
+    answerText.style.display = 'none';
+    noGeminiMsg.style.display = 'block';
+  }
+
+  const list = document.getElementById('passages-list');
+  list.innerHTML = '';
+  data.passages.forEach((p, i) => {
+    const score = p.rerank_score !== null
+      ? 'ce=' + p.rerank_score
+      : 'rrf=' + p.rrf_score;
+    list.innerHTML += `
+      <div class="passage-card rounded-lg">
+        <div class="flex items-start gap-3 mb-2">
+          <span class="cite-tag shrink-0">${i+1}</span>
+          <div class="min-w-0">
+            <p class="text-sm font-semibold leading-snug" style="color:var(--ink);">
+              ${escHtml(p.title.substring(0,90))}${p.title.length > 90 ? '…' : ''}
+            </p>
+            <p class="text-xs mt-0.5" style="color:var(--muted);">
+              ${escHtml(p.journal || 'Journal not available')}
+            </p>
+          </div>
+          <span class="score-pill ml-auto shrink-0">${score}</span>
+        </div>
+        <p class="text-xs leading-relaxed" style="color:var(--muted);">
+          ${escHtml(p.chunk_text.substring(0,300))}…
+        </p>
+      </div>`;
+  });
+}
+
+function formatAnswer(text) {
+  return text
+    .replace(/\[(\d+)\]/g,
+      '<span class="cite-tag">$1</span>')
+    .replace(/\n\n/g, '</p><p class="mt-3">')
+    .replace(/\n/g, '<br/>');
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+{% endblock %}

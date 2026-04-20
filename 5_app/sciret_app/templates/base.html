@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}SciRet{% endblock %} — Making Science Accessible</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:   #FDF8F2;
+      --sand:    #F5EDD9;
+      --amber:   #E8904A;
+      --amber-d: #C4722E;
+      --teal:    #2A7C6F;
+      --teal-d:  #1D5C52;
+      --ink:     #1C1917;
+      --muted:   #6B6560;
+      --border:  #E2D8CC;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); }
+    h1,h2,h3 { font-family: 'Lora', serif; }
+    .font-mono { font-family: 'DM Mono', monospace; }
+    .btn-amber {
+      background: var(--amber); color: white; font-weight: 500;
+      transition: background .2s, transform .15s;
+    }
+    .btn-amber:hover { background: var(--amber-d); transform: translateY(-1px); }
+    .btn-teal {
+      background: var(--teal); color: white; font-weight: 500;
+      transition: background .2s, transform .15s;
+    }
+    .btn-teal:hover { background: var(--teal-d); transform: translateY(-1px); }
+    .card {
+      background: white; border: 1px solid var(--border);
+      border-radius: 12px; transition: box-shadow .2s;
+    }
+    .card:hover { box-shadow: 0 4px 24px rgba(28,25,23,.08); }
+    .nav-link {
+      color: var(--muted); font-size: 0.9rem; font-weight: 500;
+      transition: color .15s; padding: 4px 0;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--teal); border-bottom-color: var(--teal);
+    }
+    .tag {
+      display: inline-block; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .tag-amber { background: #FEF3E2; color: var(--amber-d); }
+    .tag-teal  { background: #E0F0EE; color: var(--teal-d); }
+    .tag-gray  { background: #F0EDE9; color: var(--muted); }
+    .divider { height: 1px; background: var(--border); }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .fade-up { animation: fadeUp .5s ease both; }
+    .fade-up-1 { animation-delay:.1s; }
+    .fade-up-2 { animation-delay:.2s; }
+    .fade-up-3 { animation-delay:.3s; }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- NAV -->
+  <nav style="background:white; border-bottom:1px solid var(--border);" class="sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <div style="width:32px;height:32px;background:var(--amber);border-radius:8px;"
+             class="flex items-center justify-center">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" stroke="white" stroke-width="2"/>
+            <path d="M16.5 16.5L21 21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 11h6M11 8v6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span style="font-family:'Lora',serif; font-weight:700; font-size:1.15rem; color:var(--ink);">
+          SciRet
+        </span>
+        <span style="font-size:0.72rem; color:var(--muted); margin-top:2px;" class="hidden sm:block">
+        </span>
+      </a>
+      <div class="flex items-center gap-6">
+        <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+        <a href="/search" class="nav-link {% if request.path == '/search' %}active{% endif %}">Search</a>
+        <a href="/how-it-works" class="nav-link {% if request.path == '/how-it-works' %}active{% endif %}">How it works</a>
+        <a href="/about" class="nav-link {% if request.path == '/about' %}active{% endif %}">About</a>
+        <a href="/search"
+           class="btn-amber px-4 py-2 rounded-lg text-sm hidden sm:block">
+          Ask a question →
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid var(--border); background:white;">
+    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p style="font-family:'Lora',serif; font-weight:600; color:var(--ink);">SciRet</p>
+        <p style="font-size:0.8rem; color:var(--muted);">Making scientific research accessible to everyone.</p>
+      </div>
+      <div class="flex gap-6 text-sm" style="color:var(--muted);">
+        <a href="https://github.com/Anaskaysar/sciret" target="_blank"
+           class="hover:text-teal-700 transition-colors">GitHub</a>
+        <a href="https://arxiv.org" target="_blank"
+           class="hover:text-teal-700 transition-colors">arXiv</a>
+        <a href="https://Kaysarulanas.me" target="_blank" class="hover:text-amber-600 transition-colors">Kaysarul Anas Apurba</a> · 2026
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
