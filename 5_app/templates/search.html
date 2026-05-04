@@ -245,6 +245,13 @@ function renderResults(data) {
     noGeminiMsg.style.display = 'none';
   } else {
     answerText.style.display = 'none';
+    if (data.gen_error && data.gen_error.includes("GEMINI_API_KEY not set")) {
+      noGeminiMsg.innerHTML = `⚠ Set <code class="font-mono" style="background:#F0EDE9;padding:1px 5px;border-radius:4px;">GEMINI_API_KEY</code> to enable answer generation. Retrieved passages are shown on the right.`;
+    } else if (data.gen_error) {
+      noGeminiMsg.innerHTML = `⚠ <strong>Generation failed:</strong> ${escHtml(data.gen_error)}`;
+    } else {
+      noGeminiMsg.innerHTML = `⚠ Answer generation failed.`;
+    }
     noGeminiMsg.style.display = 'block';
   }
 

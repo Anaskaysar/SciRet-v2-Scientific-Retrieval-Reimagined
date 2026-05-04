@@ -50,7 +50,7 @@ CLIP_MODEL: str = "openai/clip-vit-base-patch32"
 CLIP_DIM: int = 512
 BLIP2_MODEL: str = "Salesforce/blip2-opt-2.7b"
 LLAVA_MODEL: str = "llava-hf/llava-1.5-7b-hf"
-GEMINI_MODEL: str = "gemini-1.5-flash"
+GEMINI_MODEL: str = "gemini-2.0-flash"
 MISTRAL_MODEL: str = "mistralai/Mistral-7B-Instruct-v0.2"
 
 # Retrieval hyperparameters — FROZEN.
@@ -124,15 +124,28 @@ class SciRetConfig:
     # --- file paths ---
     @property
     def papers_clean_path(self) -> Path:
+        if self.tier == "tier2":
+            return self.processed_dir / "papers_tier2.parquet"
         return self.processed_dir / "papers_clean.parquet"
 
     @property
     def chunks_path(self) -> Path:
+        if self.tier == "tier2":
+            return self.processed_dir / "chunks_tier2.parquet"
         return self.processed_dir / "chunks.parquet"
 
     @property
     def figures_metadata_path(self) -> Path:
+        if self.tier == "tier2":
+            return self.processed_dir / "figures_metadata_tier2.parquet"
         return self.processed_dir / "figures_metadata.parquet"
+
+    @property
+    def bm25_path(self) -> Path:
+        if self.tier == "tier2":
+            # For tier2, files are in an extra 'embeddings' subfolder
+            return self.embeddings_dir / "embeddings" / "bm25_tier2.pkl"
+        return self.embeddings_dir / "bm25_index.pkl"
 
     @property
     def tier_manifest_path(self) -> Path:

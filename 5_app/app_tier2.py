@@ -1,6 +1,6 @@
 """
-SciRet — Flask Web Application
-Run: python app.py
+SciRet — Flask Web Application (TIER 2)
+Run: python app_tier2.py
 """
 
 import os, sys, pickle, warnings, json
@@ -10,7 +10,8 @@ APP_DIR      = Path(__file__).resolve().parent
 PROJECT_ROOT = APP_DIR.parent
 sys.path.insert(0, str(PROJECT_ROOT / "2_src"))
 
-os.environ.setdefault("SCIRET_TIER", "tier1")
+# Set tier to tier2 before loading config
+os.environ.setdefault("SCIRET_TIER", "tier2")
 from dotenv import load_dotenv
 load_dotenv(PROJECT_ROOT / ".env", override=True)
 warnings.filterwarnings("ignore")
@@ -29,7 +30,7 @@ logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
 # ── load config ────────────────────────────────────────────────────────────
 from config import get_config
 CFG = get_config()
-print(f"[SciRet Flask] {CFG.summary()}")
+print(f"[SciRet Flask TIER 2] {CFG.summary()}")
 
 DEVICE     = "cuda" if torch.cuda.is_available() else "cpu"
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
@@ -39,7 +40,7 @@ print("Loading models and indexes...")
 
 chunks_df    = pd.read_parquet(CFG.chunks_path)
 
-# Handle duplicate chunk_ids if any
+# Handle duplicate chunk_ids if any (found in Tier 2 data)
 if chunks_df.duplicated("chunk_id").any():
     print(f"Warning: Found {chunks_df.duplicated('chunk_id').sum()} duplicate chunk_ids. Dropping for lookup.")
     chunks_df = chunks_df.drop_duplicates("chunk_id")
@@ -60,7 +61,9 @@ reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2", max_length=512)
 chroma_client = chromadb.PersistentClient(path=str(CFG.chroma_dir))
 text_col      = chroma_client.get_collection(CFG.text_collection)
 
-bm25_path = CFG.embeddings_dir / "bm25_index.pkl"
+# Use the new bm25_path property from config
+bm25_path = CFG.bm25_path
+print(f"Loading BM25 index from: {bm25_path}")
 with open(bm25_path, "rb") as f:
     bm25_data = pickle.load(f)
 
@@ -198,8 +201,9 @@ def api_status():
         "chunks"  : CHUNK_COUNT,
         "device"  : DEVICE,
         "gemini"  : bool(GEMINI_KEY),
-        "tier"    : "tier1",
+        "tier"    : "tier2",
     })
 
 if __name__ == "__main__":
+    # Use a different port if needed, but 5000 is fine if app.py isn't running
     app.run(debug=True, host="0.0.0.0", port=5000)
